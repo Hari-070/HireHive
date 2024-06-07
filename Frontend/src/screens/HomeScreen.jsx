@@ -19,7 +19,7 @@ import axios from "axios";
 const WelcomeScreen = () => {
 
   const Navigation = useNavigation()
-  const { logout } = useContext(AuthContext)
+  const { logout,setUser } = useContext(AuthContext)
   const [data, setData] = useState([])
 
   function renderViewLess(onPress) {
@@ -36,7 +36,7 @@ const WelcomeScreen = () => {
     Navigation.navigate("post")
   }
   const handlelogout = () => {
-    logout()
+    setUser('')
     Navigation.navigate("Login")
   }
   const handleHome = () => {
@@ -47,7 +47,7 @@ const WelcomeScreen = () => {
   useEffect(() => {
     const getPost = async () => {
       try {
-        await axios.get("http://172.17.21.207:3000/getPost")
+        await axios.get("http://172.16.129.241:3000/getPost")
           .then(res => {
             setData(res.data)
           })
@@ -87,15 +87,8 @@ const WelcomeScreen = () => {
       {/* main controller */}
 
       {/* sample mapping */}
-      <View style={{ marginTop: 10 }}>
+      <View style={{ marginTop: 10, height:100}}>
         {data.map((item) => (
-          // <View key={item.id}>
-          //   <Text>{item.username}</Text>
-          //   <Text>{item.title}</Text>
-          //   <Text>{item.description}</Text>
-          //   <Text>{item.vacancy}</Text>
-          //   <Image source={{uri: item.shopImage}}/>
-          // </View>
           <View style={styles.maincontroller}>
             <View style={styles.card}>
               <View style={styles.cardheader}>
@@ -108,27 +101,31 @@ const WelcomeScreen = () => {
                   renderViewMore={renderViewMore}
                   renderViewLess={renderViewLess}>
                   <Text numberOfLines={2}>
-                    {item.description}
-                    {/* We're hiring for the position of [Job Title] at [Your Company
-                    Name] in [City, State/Country]. This role requires [Main
-                    Responsibilities]. Ideal candidates have [Required Qualification
-                    1], [Required Qualification 2], and [Required Qualification 3].
-                    Preferred qualifications include [Preferred Qualification 1] and
-                    [Preferred Qualification 2]. */}
+                    {item.title}
                   </Text>
                 </ViewMoreText>
               </View>
               <View style={styles.innnercard}>
-                <Text>This is the inner card</Text>
+                <Text>{item.description}</Text>
+                {/* <Image source={{uri: item.shopImage}}/> */}
+              </View>
+              <View>
+                <Image source={{uri: item.shopImage}}/>
               </View>
               <View style={styles.cardfooter}>
                 <Text>Application Applied : 28</Text>
-                <Text>Vacancies : 20</Text>
+                <Text>Vacancies : {item.vacancy}</Text>
               </View>
             </View>
           </View>
         ))}
       </View>
+      <View>
+      {data.map((item)=>(
+        <Image source={{uri: item.shopImage}} style={{width: 300, height: 300}}/>
+      ))}
+      </View>
+      {/* <Image source={{uri:}} */}
       {/* Footer */}
       <View style={styles.footer}>
         <TouchableOpacity style={styles.footeritem} onPress={handleHome}>
@@ -176,8 +173,9 @@ const styles = StyleSheet.create({
   },
   maincontroller: {
     top: 40,
-    bottom: 40,
-    height: Dimensions.get("window").height - 95,
+    // bottom: 40,
+    height:100,
+    // height: Dimensions.get("window").height - 95,
     width: Dimensions.get("window").width,
     position: "absolute",
   },

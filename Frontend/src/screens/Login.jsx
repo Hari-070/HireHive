@@ -21,7 +21,7 @@ const Login = () => {
   const [username,setMail]=useState('')
   const [password,setPassword]=useState('');
   const [truee,isTruee]=useState(true);
-  const {login,logout,user} = useContext(AuthContext)
+  const {login,logout,user,setUser} = useContext(AuthContext)
   
 
   const handleSignin=async()=> {
@@ -33,18 +33,19 @@ const Login = () => {
         try {
           console.log(username,password);
 
-            const res =await axios.post("http://172.17.21.207:3000/login",{username,password})
+            const res =await axios.post("http://172.16.129.241:3000/login",{username,password})
                 console.log(res['status'])
                 if(res.status == 201) Alert.alert("Fill All the fields")
                 else if(res.status == 202) Alert.alert("User Doesnt Exist")
                 else if(res.status == 203) Alert.alert("Password is incorrect")
-                else Navigation.navigate("HomeScreen")
+                else {setUser(username)
+              Navigation.navigate("HomeScreen")}
     
            
         } catch (error) {
           isTruee(false)
             console.log("in Login error")
-            console.log(error.response.data)            
+            console.log(error)            
         }
   }
   return (

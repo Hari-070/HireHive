@@ -3,26 +3,37 @@ import { View, StyleSheet, Text, TextInput, Button, TouchableOpacity, Alert, Dim
 import { Image } from "react-native"
 import SafeAreaView from "react-native-safe-area-view"
 import { Color, FontSize } from "../../GlobalStyles"
-import { useContext, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import { AuthContext } from "../contextProvider/AuthContext"
 import axios from "axios"
 import { useNavigation } from "@react-navigation/native"
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import * as ImagePicker from 'expo-image-picker'
+import * as Location from 'expo-location'
+
 
 const Post = () => {
   const [title, setTitle] = useState('');
   const [description, setDesc] = useState('');
   const [vacancy, setVac] = useState();
-  const [shopImage, setImg] = useState('')
-  const [username, setUser] = useState('')
-  const { user, logout } = useContext(AuthContext)
+  const [shopImage, setImg] = useState('') 
+  const { user, logout,setUser } = useContext(AuthContext)
+  const [username, setUsern] = useState(user)
+  const [location, setLocation]=useState()
+  const [address,setAddress]=useState([]) 
   const Navigation = useNavigation()
 
+  // const handlePost=()=>{
+    
+  //   console.log(username,title,description,vacancy,shopImage);
+  //   // handlePost2();
+  // }
+
   const handlePost = async () => {
-    setUser("kkkkhhhh")
-    setImg("https://4.imimg.com/data4/KO/CR/MY-16526586/textile-showroom-interiors-500x500.jpg")
+    
+    // setImg("https://4.imimg.com/data4/KO/CR/MY-16526586/textile-showroom-interiors-500x500.jpg")
     try {
-      await axios.post("http://172.17.21.207:3000/post", {
+      await axios.post("http://172.16.129.241:3000/post", {
         username, title, description, vacancy, shopImage
       }).then(res => {
         Navigation.navigate("HomeScreen")
@@ -39,12 +50,49 @@ const Post = () => {
     Navigation.navigate("post")
   }
   const handlelogout = () => {
-    logout()
+    setUser('')
     Navigation.navigate("Login")
   }
   const handleHome = () => {
     Navigation.navigate("HomeScreen")
   }
+  const selectImage=async()=>{
+    let result=await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [1,1],
+      quality: 1
+    })
+    if(!result.canceled){
+      setImg(result.assets[0].uri)
+    }
+  }
+  useEffect(()=>{
+    const getPermission=async()=>{
+      const {status}=await Location.requestForegroundPermissionsAsync();
+      if(status!=='granted'){
+        console.log("please grant location access!")
+        //return;
+      }
+      let currentLocation=await Location.getCurrentPositionAsync();
+      setLocation(currentLocation)
+      console.log("Location: ")
+      console.log(location)
+    }
+    getPermission()
+  },[])
+
+  const rvsGeocode=async()=>{
+    const rvsAddress=await Location.reverseGeocodeAsync({
+      longitude: location.coords.longitude,
+      latitude: location.coords.latitude
+    })
+    console.log("the reverse location:")
+    //console.log(rvsAddress)
+    setAddress(rvsAddress)
+    console.log(address)
+  }
+  
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
@@ -54,13 +102,15 @@ const Post = () => {
         scrollEnabled={true}
       >
         <View style={{ flex: 1, flexDirection: "column", position: "relative" }}>
-          <View style={styles.imgSpace}>
-            <Image source={{ uri: 'https://as2.ftcdn.net/v2/jpg/02/23/33/13/1000_F_223331378_a41F98V1YVvvyD4kzn1gKvlxhr0l9X9Z.jpg' }}
-              style={{ width: 400, height: 400 }} />
-          </View>
+          <TouchableOpacity style={styles.imgSpace} onPress={selectImage}>
+            {(shopImage)? <Image source={{ uri: shopImage }}
+              style={{ width: 350, height: 300,marginTop:50,borderRadius:10 }} />: <Image source={{ uri: 'https://as2.ftcdn.net/v2/jpg/02/23/33/13/1000_F_223331378_a41F98V1YVvvyD4kzn1gKvlxhr0l9X9Z.jpg' }}
+              style={{ width: 350, height: 300,marginTop:50,borderRadius:10 }} />}
+           
+          </TouchableOpacity>
           <View style={styles.formContainer}>
             <Text style={styles.jobTitle}>
-              Post Your Job Title Here
+              Post Your Job Details Here:
             </Text>
             <Text style={styles.sideHead}>Title:</Text>
             <TextInput
@@ -69,14 +119,14 @@ const Post = () => {
               value={title}
               onChange={(e) => { setTitle(e.nativeEvent.text) }}
             />
-            <Text>Description:</Text>
+            <Text style={styles.sideHead}>Description:</Text>
             <TextInput
               style={styles.input}
               placeholder="Job Description"
               value={description}
               onChange={(e) => { setDesc(e.nativeEvent.text) }}
             />
-            <Text>Vacancy Available:</Text>
+            <Text style={styles.sideHead}>Vacancy Available:</Text>
             <TextInput
               style={styles.input}
               placeholder="Number of Vacancies"
@@ -84,6 +134,18 @@ const Post = () => {
               keyboardType="numeric"
               onChange={(e) => { setVac(e.nativeEvent.text) }}
             />
+            <Text style={styles.sideHead}>Location:</Text>
+            
+            <TextInput
+              style={styles.input}
+              placeholder="Shop Location"
+              value={address}
+              onChange={(e) => { setLocation(e.nativeEvent.text) }}
+            />
+            <TouchableOpacity style={{padding:5,backgroundColor:"black",marginTop:10}} onPress={rvsGeocode}>
+              <Text style={{color:"white",padding:10}}>Get Current Location</Text>
+            </TouchableOpacity>
+         
             <TouchableOpacity style={styles.postbtn} onPress={handlePost}>
               <Text style={styles.postbtnText}>Post</Text>
             </TouchableOpacity>
@@ -120,10 +182,11 @@ const Post = () => {
 const styles = StyleSheet.create({
   imgSpace: {
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'center'
   },
   formContainer: {
     padding: 20,
+    marginTop:20
   },
   jobTitle: {
     fontSize: 24,
@@ -141,9 +204,17 @@ const styles = StyleSheet.create({
     marginTop: 10,
     padding: 10,
   },
+  input1: {
+    height: 40,
+    borderColor: 'gray',
+    borderWidth: 1,
+    marginTop: 10,
+    padding: 10,
+    width:10
+  },
   postbtn: {
     backgroundColor: 'blue',
-    padding: 10,
+    padding: 15,
     marginTop: 20,
     alignItems: 'center',
   },
@@ -157,6 +228,7 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     borderTopWidth: 1,
     borderColor: 'gray',
+    marginTop:20
   },
   footeritem: {
     alignItems: 'center',
