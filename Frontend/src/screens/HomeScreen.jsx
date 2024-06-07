@@ -8,56 +8,55 @@ import {
   Dimensions,
   TextInput,
   TouchableOpacity,
-  Linking
+  Linking,
+  ScrollView,
 } from "react-native";
 import React, { useContext, useEffect, useState } from "react";
 import ViewMoreText from "react-native-view-more-text";
 import { useNavigation } from "@react-navigation/native";
 import { AuthContext } from "../contextProvider/AuthContext";
 import axios from "axios";
+import config from "../config";
+
+const Metro_Bundler_Url = config.Metro_Bundler_Url;
 
 const WelcomeScreen = () => {
-
-  const Navigation = useNavigation()
-  const { logout } = useContext(AuthContext)
-  const [data, setData] = useState([])
+  const Navigation = useNavigation();
+  const { logout } = useContext(AuthContext);
+  const [data, setData] = useState([]);
 
   function renderViewLess(onPress) {
-    return (
-      <Text onPress={onPress}>View Less</Text>
-    )
+    return <Text onPress={onPress}>View Less</Text>;
   }
   function renderViewMore(onPress) {
-    return (
-      <Text onPress={onPress}>View more</Text>
-    )
+    return <Text onPress={onPress}>View more</Text>;
   }
   const handlePost = () => {
-    Navigation.navigate("post")
-  }
+    Navigation.navigate("post");
+  };
   const handlelogout = () => {
-    logout()
-    Navigation.navigate("Login")
-  }
+    logout();
+    Navigation.navigate("Login");
+  };
   const handleHome = () => {
-    Navigation.navigate("HomeScreen")
-  }
-
+    Navigation.navigate("HomeScreen");
+  };
 
   useEffect(() => {
     const getPost = async () => {
       try {
-        await axios.get("http://172.17.21.207:3000/getPost")
-          .then(res => {
-            setData(res.data)
-          })
+        console.log("http://"+Metro_Bundler_Url+":3000/getPost");
+        await axios.get("http://"+Metro_Bundler_Url+":3000/getPost").then((res) => {
+          console.log(res.data);
+          setData(res.data);
+        });
       } catch (error) {
-        console.log(error)
-        console.log(error.response.data)
+        console.log(error);
+        console.log(error.response.data);
       }
-    }
-    getPost()
-  }, [])
+    };
+    getPost();
+  }, []);
   return (
     <View style={styles.homepage}>
       {/* header */}
@@ -85,50 +84,51 @@ const WelcomeScreen = () => {
         />
       </View>
       {/* main controller */}
-
-      {/* sample mapping */}
-      <View style={{ marginTop: 10 }}>
-        {data.map((item) => (
-          // <View key={item.id}>
-          //   <Text>{item.username}</Text>
-          //   <Text>{item.title}</Text>
-          //   <Text>{item.description}</Text>
-          //   <Text>{item.vacancy}</Text>
-          //   <Image source={{uri: item.shopImage}}/>
-          // </View>
-          <View style={styles.maincontroller}>
-            <View style={styles.card}>
-              <View style={styles.cardheader}>
-                <Image source={require("../main_assets/profile-image.png")}></Image>
-                <Text style={{ fontSize: 18 }}>{item.username}</Text>
+      <View
+        style={{ position: "relative", width: Dimensions.get("window").width }}
+      >
+        {console.log(data)}
+        {data.map((item) => {
+          return (
+            <ScrollView>
+              <View style={styles.maincontroller}>
+                <View style={styles.card}>
+                  <View style={styles.cardheader}>
+                    <Image
+                      source={require("../main_assets/profile-image.png")}
+                    ></Image>
+                    <Text style={{ fontSize: 18 }}>{item.username}</Text>
+                  </View>
+                  <View style={styles.cardcontent}>
+                    <ViewMoreText
+                      numberOfLines={2}
+                      renderViewMore={renderViewMore}
+                      renderViewLess={renderViewLess}
+                    >
+                      <Text numberOfLines={2}>{item.description}</Text>
+                    </ViewMoreText>
+                  </View>
+                  {/* <View style={styles.innnercard}>
+                    <Image source={require("../main_assets/store.jpeg")} style={{width: Dimensions.get("window").width,height:100}}></Image>
+                  </View> */}
+                  <View style={styles.innnercard}>
+                    <Text>Hello</Text>
+                  </View>
+                  <View style={styles.cardfooter}>
+                    <Text>Application Applied : 1</Text>
+                    <Text>Vacancies : {item.vacancy}</Text>
+                  </View>
+                </View>
               </View>
-              <View style={styles.cardcontent}>
-                <ViewMoreText
-                  numberOfLines={2}
-                  renderViewMore={renderViewMore}
-                  renderViewLess={renderViewLess}>
-                  <Text numberOfLines={2}>
-                    {item.description}
-                    {/* We're hiring for the position of [Job Title] at [Your Company
-                    Name] in [City, State/Country]. This role requires [Main
-                    Responsibilities]. Ideal candidates have [Required Qualification
-                    1], [Required Qualification 2], and [Required Qualification 3].
-                    Preferred qualifications include [Preferred Qualification 1] and
-                    [Preferred Qualification 2]. */}
-                  </Text>
-                </ViewMoreText>
-              </View>
-              <View style={styles.innnercard}>
-                <Text>This is the inner card</Text>
-              </View>
-              <View style={styles.cardfooter}>
-                <Text>Application Applied : 28</Text>
-                <Text>Vacancies : 20</Text>
-              </View>
-            </View>
-          </View>
-        ))}
+              <TouchableOpacity style={styles.directbtn}>
+                <Text style={styles.postbtnText}>Post</Text>
+              </TouchableOpacity>
+            </ScrollView>
+          );
+        })}
       </View>
+
+      {/* main controller */}
       {/* Footer */}
       <View style={styles.footer}>
         <TouchableOpacity style={styles.footeritem} onPress={handleHome}>
@@ -175,29 +175,32 @@ const styles = StyleSheet.create({
     position: "absolute",
   },
   maincontroller: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    justifyContent: "space-around",
     top: 40,
     bottom: 40,
-    height: Dimensions.get("window").height - 95,
+
+    // height: Dimensions.get("window").height - 95,
     width: Dimensions.get("window").width,
-    position: "absolute",
   },
   card: {
     padding: 10,
     marginTop: 20,
-    borderStyle: "solid",
-    borderWidth: 1,
+    // borderStyle: "solid",
+    // borderWidth: 1,
     width: Dimensions.get("window").width,
+    height: 300,
   },
   cardheader: {
     display: "flex",
     flexDirection: "row",
     gap: 5,
   },
-  cardcontent: {},
   innnercard: {
     borderStyle: "solid",
     borderWidth: 1,
-    height: 50,
+    height: 150,
     marginBottom: 10,
   },
   cardfooter: {
@@ -206,6 +209,9 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "row",
     justifyContent: "space-between",
+  },
+  directbtn: {
+    alignItems: "center",
   },
   footer: {
     width: Dimensions.get("window").width,

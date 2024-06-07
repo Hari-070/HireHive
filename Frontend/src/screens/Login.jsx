@@ -15,6 +15,9 @@ import { useNavigation } from "@react-navigation/native";
 import SafeAreaView from "react-native-safe-area-view";
 import axios from "axios";
 import { AuthContext } from "../contextProvider/AuthContext";
+import config from "../config";
+
+const Metro_Bundler_Url = config.Metro_Bundler_Url;
 
 const Login = () => {
   const Navigation = useNavigation();
@@ -32,8 +35,8 @@ const Login = () => {
   const handleLogin=async()=>{
         try {
           console.log(username,password);
-
-            const res =await axios.post("http://172.17.21.207:3000/login",{username,password})
+          console.log("http://"+Metro_Bundler_Url+":3000/login");
+            const res =await axios.post("http://"+Metro_Bundler_Url+":3000/login",{username,password})
                 console.log(res['status'])
                 if(res.status == 201) Alert.alert("Fill All the fields")
                 else if(res.status == 202) Alert.alert("User Doesnt Exist")
@@ -44,7 +47,7 @@ const Login = () => {
         } catch (error) {
           isTruee(false)
             console.log("in Login error")
-            console.log(error.response.data)            
+            console.log(error)            
         }
   }
   return (
