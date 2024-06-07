@@ -10,6 +10,8 @@ import HomeScreen from "../screens/HomeScreen";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Login from "../screens/Login";
 import Post from "../screens/Post";
+import Profile from "../screens/Profile";
+import EditProfile from "../screens/EditProfile";
 
 
 const App = () => {
@@ -29,7 +31,8 @@ const App = () => {
           />
           <Stack.Screen name="Login" component={Login} options={{headerShown:false}}/>
           <Stack.Screen name="post" component={Post} options={{headerShown:false}}/>
-         
+          <Stack.Screen name="Profile" component={Profile} options={{headerShown:false}}/>
+          <Stack.Screen name="Edit" component={EditProfile} options={{headerShown:false}}/>
         </Stack.Navigator>
       </NavigationContainer>
     </>
