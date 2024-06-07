@@ -8,56 +8,60 @@ import {
   Dimensions,
   TextInput,
   TouchableOpacity,
-  Linking
+  Linking,
+  ScrollView,
 } from "react-native";
 import React, { useContext, useEffect, useState } from "react";
 import ViewMoreText from "react-native-view-more-text";
 import { useNavigation } from "@react-navigation/native";
 import { AuthContext } from "../contextProvider/AuthContext";
 import axios from "axios";
+import config from "../config";
+
+const Metro_Bundler_Url = config.Metro_Bundler_Url;
+
 
 const WelcomeScreen = () => {
-
   const Navigation = useNavigation()
   const { logout,setUser } = useContext(AuthContext)
   const [data, setData] = useState([])
 
+
   function renderViewLess(onPress) {
-    return (
-      <Text onPress={onPress}>View Less</Text>
-    )
+    return <Text onPress={onPress}>View Less</Text>;
   }
   function renderViewMore(onPress) {
-    return (
-      <Text onPress={onPress}>View more</Text>
-    )
+    return <Text onPress={onPress}>View more</Text>;
   }
   const handlePost = () => {
-    Navigation.navigate("post")
-  }
+    Navigation.navigate("post");
+  };
   const handlelogout = () => {
+
     setUser('')
     Navigation.navigate("Login")
   }
-  const handleHome = () => {
-    Navigation.navigate("HomeScreen")
-  }
 
+   
+  const handleHome = () => {
+    Navigation.navigate("HomeScreen");
+  };
 
   useEffect(() => {
     const getPost = async () => {
       try {
-        await axios.get("http://172.16.129.241:3000/getPost")
-          .then(res => {
-            setData(res.data)
-          })
+        console.log("http://"+Metro_Bundler_Url+":3000/getPost");
+        await axios.get("http://"+Metro_Bundler_Url+":3000/getPost").then((res) => {
+          console.log(res.data);
+          setData(res.data);
+        });
       } catch (error) {
-        console.log(error)
-        console.log(error.response.data)
+        console.log(error);
+        console.log(error.response.data);
       }
-    }
-    getPost()
-  }, [])
+    };
+    getPost();
+  }, []);
   return (
     <View style={styles.homepage}>
       {/* header */}
@@ -85,47 +89,52 @@ const WelcomeScreen = () => {
         />
       </View>
       {/* main controller */}
+      <View
+        style={{ position: "relative", width: Dimensions.get("window").width }}
+      >
+        {console.log(data)}
+        {data.map((item) => {
+          return (
+            <ScrollView>
+              <View style={styles.maincontroller}>
+                <View style={styles.card}>
+                  <View style={styles.cardheader}>
+                    <Image
+                      source={require("../main_assets/profile-image.png")}
+                    ></Image>
+                    <Text style={{ fontSize: 18 }}>{item.username}</Text>
+                  </View>
+                  <View style={styles.cardcontent}>
+                    <ViewMoreText
+                      numberOfLines={2}
+                      renderViewMore={renderViewMore}
+                      renderViewLess={renderViewLess}
+                    >
+                      <Text numberOfLines={2}>{item.description}</Text>
+                    </ViewMoreText>
+                  </View>
+                  {/* <View style={styles.innnercard}>
+                    <Image source={require("../main_assets/store.jpeg")} style={{width: Dimensions.get("window").width,height:100}}></Image>
+                  </View> */}
+                  <View style={styles.innnercard}>
+                    <Text>Hello</Text>
+                  </View>
+                  <View style={styles.cardfooter}>
+                    <Text>Application Applied : 1</Text>
+                    <Text>Vacancies : {item.vacancy}</Text>
+                  </View>
+                </View>
 
-      {/* sample mapping */}
-      <View style={{ marginTop: 10, height:100}}>
-        {data.map((item) => (
-          <View style={styles.maincontroller}>
-            <View style={styles.card}>
-              <View style={styles.cardheader}>
-                <Image source={require("../main_assets/profile-image.png")}></Image>
-                <Text style={{ fontSize: 18 }}>{item.username}</Text>
               </View>
-              <View style={styles.cardcontent}>
-                <ViewMoreText
-                  numberOfLines={2}
-                  renderViewMore={renderViewMore}
-                  renderViewLess={renderViewLess}>
-                  <Text numberOfLines={2}>
-                    {item.title}
-                  </Text>
-                </ViewMoreText>
-              </View>
-              <View style={styles.innnercard}>
-                <Text>{item.description}</Text>
-                {/* <Image source={{uri: item.shopImage}}/> */}
-              </View>
-              <View>
-                <Image source={{uri: item.shopImage}}/>
-              </View>
-              <View style={styles.cardfooter}>
-                <Text>Application Applied : 28</Text>
-                <Text>Vacancies : {item.vacancy}</Text>
-              </View>
-            </View>
-          </View>
-        ))}
+              <TouchableOpacity style={styles.directbtn}>
+                <Text style={styles.postbtnText}>Post</Text>
+              </TouchableOpacity>
+            </ScrollView>
+          );
+        })}
       </View>
-      <View>
-      {data.map((item)=>(
-        <Image source={{uri: item.shopImage}} style={{width: 300, height: 300}}/>
-      ))}
-      </View>
-      {/* <Image source={{uri:}} */}
+      {/* main controller */}
+
       {/* Footer */}
       <View style={styles.footer}>
         <TouchableOpacity style={styles.footeritem} onPress={handleHome}>
@@ -172,30 +181,35 @@ const styles = StyleSheet.create({
     position: "absolute",
   },
   maincontroller: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    justifyContent: "space-around",
     top: 40,
-    // bottom: 40,
-    height:100,
+
+
+    bottom: 40,
+
+
     // height: Dimensions.get("window").height - 95,
     width: Dimensions.get("window").width,
-    position: "absolute",
   },
   card: {
     padding: 10,
     marginTop: 20,
-    borderStyle: "solid",
-    borderWidth: 1,
+    // borderStyle: "solid",
+    // borderWidth: 1,
     width: Dimensions.get("window").width,
+    height: 300,
   },
   cardheader: {
     display: "flex",
     flexDirection: "row",
     gap: 5,
   },
-  cardcontent: {},
   innnercard: {
     borderStyle: "solid",
     borderWidth: 1,
-    height: 50,
+    height: 150,
     marginBottom: 10,
   },
   cardfooter: {
@@ -204,6 +218,9 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "row",
     justifyContent: "space-between",
+  },
+  directbtn: {
+    alignItems: "center",
   },
   footer: {
     width: Dimensions.get("window").width,

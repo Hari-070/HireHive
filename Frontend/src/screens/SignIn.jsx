@@ -16,6 +16,10 @@ import Login from "./Login";
 import { Alert } from "react-native";
 import { AuthContext } from "../contextProvider/AuthContext";
 
+import config from "../config";
+
+const Metro_Bundler_Url = config.Metro_Bundler_Url;
+
 const SignIn = () => {
   const Navigation = useNavigation();
   const [username,setMail]=useState('')
@@ -25,7 +29,9 @@ const SignIn = () => {
   const handleSignin=async()=> {
    
     try {
-      await axios.post("http://172.16.129.241:3000/signin",{username,password})
+
+      await axios.post("http://"+Metro_Bundler_Url+":3000/signin",{username,password})
+
       .then(res=>{
         console.log(res.data)
         setMail('')

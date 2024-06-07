@@ -8,8 +8,14 @@ import { AuthContext } from "../contextProvider/AuthContext"
 import axios from "axios"
 import { useNavigation } from "@react-navigation/native"
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+
 import * as ImagePicker from 'expo-image-picker'
 import * as Location from 'expo-location'
+
+
+import config from "../config";
+
+const Metro_Bundler_Url = config.Metro_Bundler_Url;
 
 
 const Post = () => {
@@ -33,7 +39,9 @@ const Post = () => {
     
     // setImg("https://4.imimg.com/data4/KO/CR/MY-16526586/textile-showroom-interiors-500x500.jpg")
     try {
-      await axios.post("http://172.16.129.241:3000/post", {
+
+      await axios.post("http://"+Metro_Bundler_Url+":3000/post", {
+
         username, title, description, vacancy, shopImage
       }).then(res => {
         Navigation.navigate("HomeScreen")
@@ -223,15 +231,18 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   footer: {
+
     flexDirection: 'row',
     justifyContent: 'space-around',
     paddingVertical: 10,
     borderTopWidth: 1,
     borderColor: 'gray',
     marginTop:20
+
   },
   footeritem: {
-    alignItems: 'center',
+    display: "flex",
+    alignItems: "center",
   },
 });
 
