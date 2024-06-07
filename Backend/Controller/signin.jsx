@@ -12,6 +12,7 @@ const signin=async(req,res)=>{
         const data=new User({
             username:username,
             password:pas
+           
         })
         await data.save();
         return res.status(201).json("Registered sucessfully!")

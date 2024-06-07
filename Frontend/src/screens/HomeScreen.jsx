@@ -17,6 +17,7 @@ import { useNavigation } from "@react-navigation/native";
 import { AuthContext } from "../contextProvider/AuthContext";
 import axios from "axios";
 import config from "../config";
+import HomeDisplay from "./HomeDisplay";
 
 const Metro_Bundler_Url = config.Metro_Bundler_Url;
 
@@ -38,6 +39,11 @@ const WelcomeScreen = () => {
     setUser("");
     Navigation.navigate("Login");
   };
+
+  const handleProfile=()=>{
+    Navigation.navigate("Profile")
+  }
+   
 
   const handleHome = () => {
     Navigation.navigate("HomeScreen");
@@ -64,11 +70,14 @@ const WelcomeScreen = () => {
     <View style={styles.homepage}>
       {/* header */}
       <View style={styles.header}>
+        <TouchableOpacity onPress={handleProfile}>
         <Image
-          style={{ marginLeft: 20 }}
+          style={{ marginLeft: 30, width:20,height:50 }}
           contentFit="cover"
-          source={require("../main_assets/profile-image.png")}
+          source={{uri:"https://static.vecteezy.com/system/resources/previews/005/544/718/non_2x/profile-icon-design-free-vector.jpg"}}
+          
         />
+        </TouchableOpacity>
         <View style={{ flexDirection: "row", alignItems: "center" }}>
           <Image
             contentFit="cover"
@@ -87,6 +96,23 @@ const WelcomeScreen = () => {
         />
       </View>
       {/* main controller */}
+// Hari
+      <TouchableOpacity onPress={handleProfile}>
+        <Image
+          style={{ marginLeft: 30, width:20,height:50 }}
+          contentFit="cover"
+          source={{uri:"https://static.vecteezy.com/system/resources/previews/005/544/718/non_2x/profile-icon-design-free-vector.jpg"}}
+          
+        />
+        </TouchableOpacity>
+      
+      <View
+        style={{ position: "relative", width: Dimensions.get("window").width }}
+      >
+        <HomeDisplay/>
+      </View>
+//       Hari edited
+// rishab
       <ScrollView>
         <View
           style={{
@@ -134,7 +160,7 @@ const WelcomeScreen = () => {
           })}
         </View>
       </ScrollView>
-
+// rishab
       {/* main controller */}
 
       {/* Footer */}
