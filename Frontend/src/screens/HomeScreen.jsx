@@ -21,12 +21,10 @@ import HomeDisplay from "./HomeDisplay";
 
 const Metro_Bundler_Url = config.Metro_Bundler_Url;
 
-
 const WelcomeScreen = () => {
-  const Navigation = useNavigation()
-  const { logout,setUser } = useContext(AuthContext)
-  const [data, setData] = useState([])
-
+  const Navigation = useNavigation();
+  const { logout, setUser } = useContext(AuthContext);
+  const [data, setData] = useState([]);
 
   function renderViewLess(onPress) {
     return <Text onPress={onPress}>View Less</Text>;
@@ -38,15 +36,15 @@ const WelcomeScreen = () => {
     Navigation.navigate("post");
   };
   const handlelogout = () => {
-
-    setUser('')
-    Navigation.navigate("Login")
-  }
+    setUser("");
+    Navigation.navigate("Login");
+  };
 
   const handleProfile=()=>{
     Navigation.navigate("Profile")
   }
    
+
   const handleHome = () => {
     Navigation.navigate("HomeScreen");
   };
@@ -54,11 +52,13 @@ const WelcomeScreen = () => {
   useEffect(() => {
     const getPost = async () => {
       try {
-        console.log("http://"+Metro_Bundler_Url+":3000/getPost");
-        await axios.get("http://"+Metro_Bundler_Url+":3000/getPost").then((res) => {
-          console.log(res.data);
-          setData(res.data);
-        });
+        console.log("http://" + Metro_Bundler_Url + ":3000/getPost");
+        await axios
+          .get("http://" + Metro_Bundler_Url + ":3000/getPost")
+          .then((res) => {
+            console.log(res.data);
+            setData(res.data);
+          });
       } catch (error) {
         console.log(error);
         console.log(error.response.data);
@@ -96,6 +96,7 @@ const WelcomeScreen = () => {
         />
       </View>
       {/* main controller */}
+// Hari
       <TouchableOpacity onPress={handleProfile}>
         <Image
           style={{ marginLeft: 30, width:20,height:50 }}
@@ -110,7 +111,56 @@ const WelcomeScreen = () => {
       >
         <HomeDisplay/>
       </View>
-      
+//       Hari edited
+// rishab
+      <ScrollView>
+        <View
+          style={{
+            position: "relative",
+            width: Dimensions.get("window").width,
+          }}
+        >
+          {console.log(data)}
+          {data.map((item) => {
+            return (
+              <>
+                <View style={styles.maincontroller}>
+                  <View style={styles.card}>
+                    <View style={styles.cardheader}>
+                      <Image
+                        source={require("../main_assets/profile-image.png")}
+                        style={{width:40,height:40}}
+                      ></Image>
+                      <Text style={{ fontSize: 25 }}>{item.username}</Text>
+                    </View>
+                    <View style={styles.cardcontent}>
+                      <ViewMoreText
+                        numberOfLines={2}
+                        renderViewMore={renderViewMore}
+                        renderViewLess={renderViewLess}
+                      >
+                        <Text style={{ fontSize: 20 }} numberOfLines={2}>{item.description}</Text>
+                      </ViewMoreText>
+                    </View>
+                    <View style={styles.innnercard}>
+                      <Image source={{uri:item.shopImage}} style={{width:"350px",height:300}}></Image>
+                    </View>
+                    <View style={styles.cardfooter}>
+                      <Text style={{ fontSize: 18 }}>Application Applied : 1</Text>
+                      <Text style={{ fontSize: 18 }}>Vacancies : {item.vacancy}</Text>
+                    </View>
+                  </View>
+                </View>
+                <TouchableOpacity style={styles.directbtn}>
+                  <Text style={styles.postbtnText}>Direct Me</Text>
+                  <Text style={styles.postbtnText}>Apply</Text>
+                </TouchableOpacity>
+              </>
+            );
+          })}
+        </View>
+      </ScrollView>
+// rishab
       {/* main controller */}
 
       {/* Footer */}
@@ -163,21 +213,16 @@ const styles = StyleSheet.create({
     flexWrap: "wrap",
     justifyContent: "space-around",
     top: 40,
-
-
     bottom: 40,
-
-
     // height: Dimensions.get("window").height - 95,
     width: Dimensions.get("window").width,
   },
   card: {
     padding: 10,
-    marginTop: 20,
     // borderStyle: "solid",
     // borderWidth: 1,
     width: Dimensions.get("window").width,
-    height: 300,
+    height: 450,
   },
   cardheader: {
     display: "flex",
@@ -187,10 +232,11 @@ const styles = StyleSheet.create({
   innnercard: {
     borderStyle: "solid",
     borderWidth: 1,
-    height: 150,
+    height: 300,
     marginBottom: 10,
   },
   cardfooter: {
+    
     borderStyle: "solid",
     borderWidth: 1,
     display: "flex",
@@ -201,10 +247,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   footer: {
+    padding:5,
+    backgroundColor:"white",
     width: Dimensions.get("window").width,
     position: "absolute",
     bottom: 0,
-    marginBottom: 10,
     flex: 1,
     flexDirection: "row",
     justifyContent: "space-evenly",

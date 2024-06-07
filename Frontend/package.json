@@ -9,7 +9,7 @@
     "web": "expo start --web"
   },
   "dependencies": {
-    "@ant-design/icons": "^5.3.7",
+
     "@expo/metro-runtime": "~3.2.1",
     "@react-navigation/native": "^6.1.17",
     "@react-navigation/native-stack": "^6.9.26",
@@ -17,6 +17,8 @@
     "@rneui/themed": "^4.0.0-rc.8",
     "@types/react-native": "^0.70.19",
     "axios": "^1.7.2",
+    "cloudinary": "^2.2.0",
+    "cloudinary-react-native": "^1.0.0",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "expo": "~51.0.8",
@@ -27,9 +29,11 @@
     "expo-module-scripts": "^3.5.1",
     "expo-router": "~3.5.14",
     "expo-status-bar": "~1.12.1",
+    "multer": "^1.4.5-lts.1",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-native": "0.74.1",
+    "react-native-image-picker": "^7.1.2",
     "react-native-keyboard-aware-scroll-view": "^0.9.5",
     "react-native-paper": "^5.12.3",
     "react-native-safe-area-view": "^1.1.1",
