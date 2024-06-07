@@ -20,10 +20,12 @@ import config from "../config";
 
 const Metro_Bundler_Url = config.Metro_Bundler_Url;
 
+
 const WelcomeScreen = () => {
-  const Navigation = useNavigation();
-  const { logout } = useContext(AuthContext);
-  const [data, setData] = useState([]);
+  const Navigation = useNavigation()
+  const { logout,setUser } = useContext(AuthContext)
+  const [data, setData] = useState([])
+
 
   function renderViewLess(onPress) {
     return <Text onPress={onPress}>View Less</Text>;
@@ -35,9 +37,12 @@ const WelcomeScreen = () => {
     Navigation.navigate("post");
   };
   const handlelogout = () => {
-    logout();
-    Navigation.navigate("Login");
-  };
+
+    setUser('')
+    Navigation.navigate("Login")
+  }
+
+   
   const handleHome = () => {
     Navigation.navigate("HomeScreen");
   };
@@ -119,6 +124,7 @@ const WelcomeScreen = () => {
                     <Text>Vacancies : {item.vacancy}</Text>
                   </View>
                 </View>
+
               </View>
               <TouchableOpacity style={styles.directbtn}>
                 <Text style={styles.postbtnText}>Post</Text>
@@ -127,8 +133,8 @@ const WelcomeScreen = () => {
           );
         })}
       </View>
-
       {/* main controller */}
+
       {/* Footer */}
       <View style={styles.footer}>
         <TouchableOpacity style={styles.footeritem} onPress={handleHome}>
@@ -179,7 +185,10 @@ const styles = StyleSheet.create({
     flexWrap: "wrap",
     justifyContent: "space-around",
     top: 40,
+
+
     bottom: 40,
+
 
     // height: Dimensions.get("window").height - 95,
     width: Dimensions.get("window").width,

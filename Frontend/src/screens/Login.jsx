@@ -24,7 +24,7 @@ const Login = () => {
   const [username,setMail]=useState('')
   const [password,setPassword]=useState('');
   const [truee,isTruee]=useState(true);
-  const {login,logout,user} = useContext(AuthContext)
+  const {login,logout,user,setUser} = useContext(AuthContext)
   
 
   const handleSignin=async()=> {
@@ -35,13 +35,16 @@ const Login = () => {
   const handleLogin=async()=>{
         try {
           console.log(username,password);
+
           console.log("http://"+Metro_Bundler_Url+":3000/login");
             const res =await axios.post("http://"+Metro_Bundler_Url+":3000/login",{username,password})
+
                 console.log(res['status'])
                 if(res.status == 201) Alert.alert("Fill All the fields")
                 else if(res.status == 202) Alert.alert("User Doesnt Exist")
                 else if(res.status == 203) Alert.alert("Password is incorrect")
-                else Navigation.navigate("HomeScreen")
+                else {setUser(username)
+              Navigation.navigate("HomeScreen")}
     
            
         } catch (error) {

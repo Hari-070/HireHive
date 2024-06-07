@@ -24,19 +24,22 @@ const SignIn = () => {
   const Navigation = useNavigation();
   const [username,setMail]=useState('')
   const [password,setPassword]=useState('');
-  const {login}=useContext(AuthContext)
+  const {login,setUser}=useContext(AuthContext)
 
   const handleSignin=async()=> {
    
     try {
+
       await axios.post("http://"+Metro_Bundler_Url+":3000/signin",{username,password})
+
       .then(res=>{
         console.log(res.data)
         setMail('')
         setPassword('')
+        setUser(username)
         Navigation.navigate("HomeScreen");
-        const userData=username
-        login(userData)
+        // const userData=username
+        // login(userData)
       })
     } catch (error) {
       console.log(error);

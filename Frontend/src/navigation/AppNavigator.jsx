@@ -29,6 +29,7 @@ const App = () => {
           />
           <Stack.Screen name="Login" component={Login} options={{headerShown:false}}/>
           <Stack.Screen name="post" component={Post} options={{headerShown:false}}/>
+         
         </Stack.Navigator>
       </NavigationContainer>
     </>
