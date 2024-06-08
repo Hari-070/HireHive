@@ -15,6 +15,7 @@ const post=async(req,res)=>{
             description,
             vacancy,
             shopImage,
+            applied:5
         })
         await data.save()
         return res.status(201).json("post have been added successfully!")

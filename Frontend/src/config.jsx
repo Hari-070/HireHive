@@ -1,5 +1,5 @@
 export default{
 
-    Metro_Bundler_Url : "172.16.120.215"
+    Metro_Bundler_Url : "172.17.23.103"
 
 };

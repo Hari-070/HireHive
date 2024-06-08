@@ -35,6 +35,7 @@ const Post = () => {
   const [username, setUsern] = useState(user);
   const [location, setLocation] = useState();
   const [address, setAddress] = useState([]);
+  const [applied,setApplied]=useState(0)
   const Navigation = useNavigation();
 
   // const handlePost=()=>{

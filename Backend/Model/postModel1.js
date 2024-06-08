@@ -20,6 +20,10 @@ const postSchema=new mongoose.Schema({
     shopImage:{
         type:String,
         required:true
+    },
+    applied:{
+        type:Number,
+        required:true
     }
 })
 

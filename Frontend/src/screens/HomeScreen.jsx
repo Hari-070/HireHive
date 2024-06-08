@@ -17,7 +17,6 @@ import { useNavigation } from "@react-navigation/native";
 import { AuthContext } from "../contextProvider/AuthContext";
 import axios from "axios";
 import config from "../config";
-import HomeDisplay from "./HomeDisplay";
 
 const Metro_Bundler_Url = config.Metro_Bundler_Url;
 
@@ -40,43 +39,48 @@ const WelcomeScreen = () => {
     Navigation.navigate("Login");
   };
 
-  const handleProfile=()=>{
-    Navigation.navigate("Profile")
-  }
-   
+  const handleProfile = () => {
+    console.log("In onhandle profile");
+    Navigation.navigate("Profile");
+  };
 
   const handleHome = () => {
     Navigation.navigate("HomeScreen");
   };
 
   useEffect(() => {
-    const getPost = async () => {
-      try {
-        console.log("http://" + Metro_Bundler_Url + ":3000/getPost");
-        await axios
-          .get("http://" + Metro_Bundler_Url + ":3000/getPost")
-          .then((res) => {
-            console.log(res.data);
-            setData(res.data);
-          });
-      } catch (error) {
-        console.log(error);
-        console.log(error.response.data);
-      }
-    };
-    getPost();
-  }, []);
+    try {
+      console.log("In useeffect of home screen")
+      axios.get("http://" + Metro_Bundler_Url + ":3000/getPost")
+      .then((res) => {
+        setData(res.data);
+        console.log(res.data)
+      });
+    } catch (error) {
+      console.log(error);
+      console.log(error.response.data);
+    }
+  },[]);
+
+  const handleApply = (id) => {
+    // console.log(id);
+    axios.post("http://" + Metro_Bundler_Url + ":3000/applied",{id})
+    // .then(res=>{
+    //   console.log(res)
+    // })
+  };
   return (
     <View style={styles.homepage}>
       {/* header */}
       <View style={styles.header}>
         <TouchableOpacity onPress={handleProfile}>
-        <Image
-          style={{ marginLeft: 30, width:20,height:50 }}
-          contentFit="cover"
-          source={{uri:"https://static.vecteezy.com/system/resources/previews/005/544/718/non_2x/profile-icon-design-free-vector.jpg"}}
-          
-        />
+          <Image
+            style={{ marginLeft: 30, width: 20, height: 50 }}
+            contentFit="cover"
+            source={{
+              uri: "https://static.vecteezy.com/system/resources/previews/005/544/718/non_2x/profile-icon-design-free-vector.jpg",
+            }}
+          />
         </TouchableOpacity>
         <View style={{ flexDirection: "row", alignItems: "center" }}>
           <Image
@@ -96,40 +100,38 @@ const WelcomeScreen = () => {
         />
       </View>
       {/* main controller */}
-// Hari
+
       <TouchableOpacity onPress={handleProfile}>
         <Image
-          style={{ marginLeft: 30, width:20,height:50 }}
+          style={{ marginLeft: 30, width: 20, height: 50 }}
           contentFit="cover"
-          source={{uri:"https://static.vecteezy.com/system/resources/previews/005/544/718/non_2x/profile-icon-design-free-vector.jpg"}}
-          
+          source={{
+            uri: "https://static.vecteezy.com/system/resources/previews/005/544/718/non_2x/profile-icon-design-free-vector.jpg",
+          }}
         />
-        </TouchableOpacity>
-      
+      </TouchableOpacity>
       <View
         style={{ position: "relative", width: Dimensions.get("window").width }}
       >
-        <HomeDisplay/>
+        {/* <HomeDisplay/> */}
       </View>
-//       Hari edited
-// rishab
       <ScrollView>
         <View
           style={{
+            marginBottom: 80,
             position: "relative",
             width: Dimensions.get("window").width,
           }}
         >
-          {console.log(data)}
           {data.map((item) => {
             return (
               <>
-                <View style={styles.maincontroller}>
+                <View key={item.id} style={styles.maincontroller}>
                   <View style={styles.card}>
                     <View style={styles.cardheader}>
                       <Image
                         source={require("../main_assets/profile-image.png")}
-                        style={{width:40,height:40}}
+                        style={{ width: 40, height: 40 }}
                       ></Image>
                       <Text style={{ fontSize: 25 }}>{item.username}</Text>
                     </View>
@@ -139,30 +141,39 @@ const WelcomeScreen = () => {
                         renderViewMore={renderViewMore}
                         renderViewLess={renderViewLess}
                       >
-                        <Text style={{ fontSize: 20 }} numberOfLines={2}>{item.description}</Text>
+                        <Text style={{ fontSize: 20 }} numberOfLines={2}>
+                          {item.description}
+                        </Text>
                       </ViewMoreText>
                     </View>
                     <View style={styles.innnercard}>
-                      <Image source={{uri:item.shopImage}} style={{width:"350px",height:300}}></Image>
+                      <Image
+                        source={{ uri: item.shopImage }}
+                        style={{ width: "350px", height: 300 }}
+                      ></Image>
                     </View>
                     <View style={styles.cardfooter}>
-                      <Text style={{ fontSize: 18 }}>Application Applied : 1</Text>
-                      <Text style={{ fontSize: 18 }}>Vacancies : {item.vacancy}</Text>
+                      <Text style={{ fontSize: 18 }}>
+                        Application Applied : {item.applied}
+                      </Text>
+                      <Text style={{ fontSize: 18 }}>
+                        Vacancies : {item.vacancy}
+                      </Text>
                     </View>
                   </View>
                 </View>
-                <TouchableOpacity style={styles.directbtn}>
-                  <Text style={styles.postbtnText}>Direct Me</Text>
-                  <Text style={styles.postbtnText}>Apply</Text>
+                <TouchableOpacity
+                  style={styles.directbtn}
+                  onPress={() => handleApply(item._id)}
+                >
+                  <Text style={{ fontSize: 20 }}>Apply</Text>
                 </TouchableOpacity>
               </>
             );
           })}
         </View>
       </ScrollView>
-// rishab
       {/* main controller */}
-
       {/* Footer */}
       <View style={styles.footer}>
         <TouchableOpacity style={styles.footeritem} onPress={handleHome}>
@@ -236,7 +247,6 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   cardfooter: {
-    
     borderStyle: "solid",
     borderWidth: 1,
     display: "flex",
@@ -244,11 +254,12 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
   directbtn: {
+    marginTop: 10,
     alignItems: "center",
   },
   footer: {
-    padding:5,
-    backgroundColor:"white",
+    padding: 5,
+    backgroundColor: "white",
     width: Dimensions.get("window").width,
     position: "absolute",
     bottom: 0,

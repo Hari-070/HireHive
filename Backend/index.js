@@ -7,6 +7,7 @@ const post = require('./Controller/post.jsx');
 const allPosts = require('./Controller/allPosts.jsx');
 const profileEdit = require('./Controller/profileEdit.jsx');
 const postDisplay = require('./Controller/postDisplay.jsx');
+const applied = require('./Controller/applied.jsx');
 
 // import express from 'express';
 // import mongoose from 'mongoose';
@@ -25,6 +26,7 @@ app.post("/post",cors(),post)
 app.get("/getPost",cors(),allPosts)
 app.post("/editPost",cors(),profileEdit)
 app.post("/getProfile",cors(),postDisplay)
+app.post("/applied",cors(),applied)
 
 mongoose.connect("mongodb+srv://harianand2102:12345@hirehivedb.shgatga.mongodb.net/?retryWrites=true&w=majority&appName=HireHiveDB")
 
